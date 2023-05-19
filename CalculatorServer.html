@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculadora</title>
+  <style>
+    body {
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    .calculator {
+      display: inline-block;
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .calculator input {
+      width: 200px;
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+
+    .calculator button {
+      width: 50px;
+      height: 30px;
+      margin: 5px;
+    }
+
+    #result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var result = document.getElementById('result');
+      var calculatorForm = document.getElementById('calculator-form');
+
+      calculatorForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var operation = document.getElementById('operation').value;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/calculate', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            result.textContent = "Resultado: " + response.result;
+          }
+        };
+        xhr.send(JSON.stringify({ operation: operation }));
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Calculadora</h1>
+  <div class="calculator">
+    <form id="calculator-form">
+      <input type="text" id="operation" placeholder="Operación matemática" required>
+      <br>
+      <button type="submit">Calcular</button>
+    </form>
+    <div id="result"></div>
+  </div>
+</body>
+</html>
